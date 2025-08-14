@@ -1,24 +1,66 @@
 name: Playwright CI
+
 on:
   push:
   pull_request:
   workflow_dispatch:
 
+# needed for gh-pages deploy
+permissions:
+  contents: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci || npm install
-      - run: npx playwright install --with-deps
-      - run: npm test
+          cache: npm
+
+      # Allure CLI needs Java. Ubuntu runner has it, but set it explicitly to be safe.
+      - name: Setup Java (for Allure)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install deps
+        run: |
+          npm ci || npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # Force Allure reporter explicitly in case config changes
+      - name: Run tests (with Allure)
+        run: npx playwright test --reporter=line,allure-playwright
+
       - name: Generate Allure report
+        if: always()
         run: npx allure generate --clean allure-results -o allure-report
+
       - name: Upload Allure report artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report
+
+      # Publish the Allure HTML to GitHub Pages (live report)
+      - name: Deploy Allure to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          publish_branch: gh-pages
