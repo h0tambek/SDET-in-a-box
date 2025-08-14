@@ -1,0 +1,4 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","2911","DemoQA: text box form shows output","chromium","Thu Aug 14 20:04:48 UTC 2025","passed","Thu Aug 14 20:04:51 UTC 2025","","demoqa/textbox.spec.ts","",""
+"","1984","RealWorld: smoke navigation is visible","chromium","Thu Aug 14 20:04:48 UTC 2025","passed","Thu Aug 14 20:04:50 UTC 2025","","realworld/smoke.spec.ts","",""
+"","734","SauceDemo: login and see inventory","chromium","Thu Aug 14 20:04:50 UTC 2025","passed","Thu Aug 14 20:04:51 UTC 2025","","saucedemo/login_and_inventory.spec.ts","",""
