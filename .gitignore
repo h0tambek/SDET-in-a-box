@@ -1,0 +1,22 @@
+# dependencies
+node_modules/
+
+# env & local config
+.env
+*.local
+
+# playwright outputs
+playwright-report/
+test-results/
+blob-report/
+trace.zip
+*.trace.zip
+
+# allure outputs
+allure-results/
+allure-report/
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+.vscode/
